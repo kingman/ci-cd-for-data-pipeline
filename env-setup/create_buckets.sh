@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-gsutil ls -L gs://$DATAFLOW_JAR_BUCKET_TEST || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_JAR_BUCKET_TEST"
-gsutil ls -L gs://$INPUT_BUCKET_TEST || gsutil mb -c regional -l $COMPOSER_REGION "gs://$INPUT_BUCKET_TEST"
-gsutil ls -L gs://$REF_BUCKET_TEST || gsutil mb -c regional -l $COMPOSER_REGION "gs://$REF_BUCKET_TEST"
-gsutil ls -L gs://$RESULT_BUCKET_TEST || gsutil mb -c regional -l $COMPOSER_REGION "gs://$RESULT_BUCKET_TEST"
-gsutil ls -L gs://$DATAFLOW_STAGING_BUCKET_TEST || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_STAGING_BUCKET_TEST"
-gsutil ls -L gs://$DATAFLOW_JAR_BUCKET_PROD || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_JAR_BUCKET_PROD"
-gsutil ls -L gs://$INPUT_BUCKET_PROD || gsutil mb -c regional -l $COMPOSER_REGION "gs://$INPUT_BUCKET_PROD"
-gsutil ls -L gs://$RESULT_BUCKET_PROD || gsutil mb -c regional -l $COMPOSER_REGION "gs://$RESULT_BUCKET_PROD"
-gsutil ls -L gs://$DATAFLOW_STAGING_BUCKET_PROD || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_STAGING_BUCKET_PROD"
+gsutil ls -L gs://$DATAFLOW_JAR_BUCKET_TEST 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_JAR_BUCKET_TEST"
+gsutil ls -L gs://$INPUT_BUCKET_TEST 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$INPUT_BUCKET_TEST"
+gsutil ls -L gs://$REF_BUCKET_TEST 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$REF_BUCKET_TEST"
+gsutil ls -L gs://$RESULT_BUCKET_TEST 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$RESULT_BUCKET_TEST"
+gsutil ls -L gs://$DATAFLOW_STAGING_BUCKET_TEST 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_STAGING_BUCKET_TEST"
+gsutil ls -L gs://$DATAFLOW_JAR_BUCKET_PROD 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_JAR_BUCKET_PROD"
+gsutil ls -L gs://$INPUT_BUCKET_PROD 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$INPUT_BUCKET_PROD"
+gsutil ls -L gs://$RESULT_BUCKET_PROD 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$RESULT_BUCKET_PROD"
+gsutil ls -L gs://$DATAFLOW_STAGING_BUCKET_PROD 2>/dev/null || gsutil mb -c regional -l $COMPOSER_REGION "gs://$DATAFLOW_STAGING_BUCKET_PROD"
 
 gsutil acl ch -u $COMPOSER_SERVICE_ACCOUNT:R gs://$DATAFLOW_JAR_BUCKET_TEST gs://$INPUT_BUCKET_TEST gs://$REF_BUCKET_TEST gs://$DATAFLOW_JAR_BUCKET_PROD gs://$INPUT_BUCKET_PROD
 gsutil acl ch -u $COMPOSER_SERVICE_ACCOUNT:W gs://$RESULT_BUCKET_TEST gs://$DATAFLOW_STAGING_BUCKET_TEST gs://$RESULT_BUCKET_PROD gs://$DATAFLOW_STAGING_BUCKET_PROD

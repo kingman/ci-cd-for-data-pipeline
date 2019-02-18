@@ -24,6 +24,8 @@ dataflow_jar_location = 'gs://' \
     + models.Variable.get('dataflow_jar_location_test') \
     + '/' + models.Variable.get('dataflow_jar_file_test')
 project = models.Variable.get('gcp_project')
+region = models.Variable.get('gcp_region')
+zone = models.Variable.get('gcp_zone')
 input_bucket = 'gs://' + models.Variable.get('gcs_input_bucket_test')
 output_bucket_name = models.Variable.get('gcs_output_bucket_test')
 output_bucket = 'gs://' + output_bucket_name
@@ -65,8 +67,8 @@ def verify_test_result(ref_task_id, res_task_ids, **context):
 default_args = {
     'dataflow_default_options': {
         'project': project,
-        'zone': 'europe-west1-b',
-        'region': 'europe-west1',
+        'zone': zone,
+        'region': region,
         'stagingLocation': dataflow_staging_bucket
     }
 }
@@ -81,7 +83,7 @@ with models.DAG(
         start_date=yesterday,
         options={
             'autoscalingAlgorithm': 'BASIC',
-            'maxNumWorkers': '50',
+            'maxNumWorkers': '3',
             'inputFile': input_bucket+'/input.txt',
             'output': output_bucket+'/'+output_prefix
         }

@@ -14,24 +14,33 @@
 steps:
 - name: gcr.io/cloud-builders/git
   args: ['clone', 'https://source.developers.google.com/p/$PROJECT_ID/r/${_DATA_FLOW_SOURCE_REPO}']
+  id: 'check-out-process-source'
 - name: gcr.io/cloud-builders/mvn
-  args: ['package']
+  args: ['package', '-q']
   dir: '${_DATA_FLOW_SOURCE_REPO}'
+  id: 'build-jar'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', '*bundled*.jar', 'gs://${_DATAFLOW_JAR_BUCKET}/dataflow_deployment_$BUILD_ID.jar']
   dir: '${_DATA_FLOW_SOURCE_REPO}/target'
+  id: 'deploy-jar'
 - name: gcr.io/cloud-builders/git
   args: ['clone', 'https://source.developers.google.com/p/$PROJECT_ID/r/${_DATA_PIPELINE_SOURCE_REPO}']
+  id: 'check-out-pipeline-source'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'support-files/input.txt', 'gs://${_COMPOSER_INPUT_BUCKET}']
   dir: '${_DATA_PIPELINE_SOURCE_REPO}'
+  id: 'deploy-test-input-file'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'support-files/ref.txt', 'gs://${_COMPOSER_REF_BUCKET}']
   dir: '${_DATA_PIPELINE_SOURCE_REPO}'
+  id: 'deploy-test-ref-file'
 - name: gcr.io/cloud-builders/gcloud
   args: ['composer', 'environments', 'run', '${_COMPOSER_ENV_NAME}', '--location', '${_COMPOSER_REGION}','variables', '--', '--set', 'dataflow_jar_file_test', 'dataflow_deployment_$BUILD_ID.jar']
+  id: 'set-composer-jar-ref'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'data-pipeline-test.py', '${_COMPOSER_DAG_BUCKET}']
   dir: '${_DATA_PIPELINE_SOURCE_REPO}'
+  id: 'deploy-processing-pipeline'
 - name: gcr.io/cloud-builders/gcloud
   args: ['composer', 'environments', 'run', '${_COMPOSER_ENV_NAME}', '--location', '${_COMPOSER_REGION}', 'trigger_dag', '--', '${_COMPOSER_DAG_NAME_TEST}', '--run_id=$BUILD_ID']
+  id: 'trigger-pipeline-execution'

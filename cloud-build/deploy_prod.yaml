@@ -14,13 +14,18 @@
 steps:
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'gs://${_DATAFLOW_JAR_BUCKET_TEST}/${_DATAFLOW_JAR_FILE_LATEST}', 'gs://${_DATAFLOW_JAR_BUCKET_PROD}/dataflow_deployment_$BUILD_ID.jar']
+  id: 'deploy-jar-to-prod'
 - name: gcr.io/cloud-builders/git
   args: ['clone', 'https://source.developers.google.com/p/$PROJECT_ID/r/${_DATA_PIPELINE_SOURCE_REPO}']
+  id: 'check-out-pipeline-source'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'support-files/input.txt', 'gs://${_COMPOSER_INPUT_BUCKET}']
   dir: '${_DATA_PIPELINE_SOURCE_REPO}'
+  id: 'deploy-input-file'
 - name: gcr.io/cloud-builders/gcloud
   args: ['composer', 'environments', 'run', '${_COMPOSER_ENV_NAME}', '--location', '${_COMPOSER_REGION}','variables', '--', '--set', 'dataflow_jar_file_prod', 'dataflow_deployment_$BUILD_ID.jar']
+  id: 'set-composer-jar-ref'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'data-pipeline-prod.py', '${_COMPOSER_DAG_BUCKET}']
   dir: '${_DATA_PIPELINE_SOURCE_REPO}'
+  id: 'deploy-processing-pipeline'

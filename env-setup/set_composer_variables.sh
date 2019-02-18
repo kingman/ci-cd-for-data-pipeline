@@ -15,6 +15,8 @@
 
 declare -A variables
 variables["gcp_project"]="$GCP_PROJECT_ID"
+variables["gcp_region"]="$COMPOSER_REGION"
+variables["gcp_zone"]="$COMPOSER_ZONE_ID"
 variables["dataflow_jar_location_test"]="$DATAFLOW_JAR_BUCKET_TEST"
 variables["dataflow_jar_file_test"]="to_be_overriden"
 variables["gcs_input_bucket_test"]="$INPUT_BUCKET_TEST"
