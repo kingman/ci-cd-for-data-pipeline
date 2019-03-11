@@ -31,6 +31,6 @@ export RESULT_BUCKET_REGION=$COMPOSER_REGION
 export COMPOSER_ZONE_ID='us-central1-a'
 
 export COMPOSER_ENV_NAME='data-pipeline-composer'
-export DATAFLOW_SOURCE_REPO='process-source'
-export DATA_PIPELINE_SOURCE_REPO='composer-dag-source'
+export SOURCE_CODE_REPO='data-pipeline-source'
 export COMPOSER_DAG_NAME_TEST='test_word_count'
+export COMPOSER_DAG_NAME_PROD='prod_word_count'
