@@ -15,9 +15,10 @@
 n=0
 until [ $n -ge $4 ]
 do
-   gcloud composer environments run $1 --location $2 list_dags 2>&1 >/dev/null | grep $3 && break
-   status=$?
-   n=$[$n+1]
-   sleep $5
+  status=0
+  gcloud composer environments run $1 --location $2 list_dags 2>&1 >/dev/null | grep $3 && break
+  status=$?
+  n=$[$n+1]
+  sleep $5
 done
 exit $status
