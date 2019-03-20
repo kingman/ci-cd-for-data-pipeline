@@ -13,35 +13,35 @@
 # limitations under the License.
 steps:
 - name: gcr.io/cloud-builders/git
-  args: ['clone', 'https://source.developers.google.com/p/$PROJECT_ID/r/${_SOURCE_CODE_REPO}']
+  args: ['clone', 'https://source.developers.google.com/p/$PROJECT_ID/r/$REPO_NAME']
   id: 'check-out-source-code'
 - name: gcr.io/cloud-builders/mvn
   args: ['package', '-q']
-  dir: '${_SOURCE_CODE_REPO}/wordcount-source'
+  dir: '$REPO_NAME/wordcount-source'
   id: 'build-jar'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', '*bundled*.jar', 'gs://${_DATAFLOW_JAR_BUCKET}/dataflow_deployment_$BUILD_ID.jar']
-  dir: '${_SOURCE_CODE_REPO}/wordcount-source/target'
+  dir: '$REPO_NAME/wordcount-source/target'
   id: 'deploy-jar'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'support-files/input.txt', 'gs://${_COMPOSER_INPUT_BUCKET}']
-  dir: '${_SOURCE_CODE_REPO}/pipeline-source'
+  dir: '$REPO_NAME/pipeline-source'
   id: 'deploy-test-input-file'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'support-files/ref.txt', 'gs://${_COMPOSER_REF_BUCKET}']
-  dir: '${_SOURCE_CODE_REPO}/pipeline-source'
+  dir: '$REPO_NAME/pipeline-source'
   id: 'deploy-test-ref-file'
 - name: gcr.io/cloud-builders/gcloud
   args: ['composer', 'environments', 'run', '${_COMPOSER_ENV_NAME}', '--location', '${_COMPOSER_REGION}','variables', '--', '--set', 'dataflow_jar_file_test', 'dataflow_deployment_$BUILD_ID.jar']
   id: 'set-composer-jar-ref'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'data-pipeline-test.py', '${_COMPOSER_DAG_BUCKET}']
-  dir: '${_SOURCE_CODE_REPO}/pipeline-source'
+  dir: '$REPO_NAME/pipeline-source'
   id: 'deploy-processing-pipeline'
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: 'bash'
   args: ['wait_for_dag_deployed.sh', '${_COMPOSER_ENV_NAME}', '${_COMPOSER_REGION}', '${_COMPOSER_DAG_NAME_TEST}', '6', '20']
-  dir: '${_SOURCE_CODE_REPO}/build-source'
+  dir: '$REPO_NAME/build-source'
   id: 'wait-for-dag-deployed-on-composer'
 - name: gcr.io/cloud-builders/gcloud
   args: ['composer', 'environments', 'run', '${_COMPOSER_ENV_NAME}', '--location', '${_COMPOSER_REGION}', 'trigger_dag', '--', '${_COMPOSER_DAG_NAME_TEST}', '--run_id=$BUILD_ID']
