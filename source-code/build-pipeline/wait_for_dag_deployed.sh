@@ -1,6 +1,9 @@
 #!/bin/bash
+#
+# Script that waits for the specified Cloud Composer DAG to deploy.
+#
 # Copyright Google Inc. 2019
-
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,11 +15,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 n=0
 until [ $n -ge $4 ]
 do
   status=0
-  gcloud composer environments run $1 --location $2 list_dags 2>&1 >/dev/null | grep $3 && break
+  gcloud composer environments run $1 --location $2 list_dags 2>&1 >/dev/null \
+  | grep $3 && break
   status=$?
   n=$[$n+1]
   sleep $5
