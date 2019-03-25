@@ -1,4 +1,3 @@
-# Do comparison between dictonaries stored in xcom
 # Copyright 2019 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Custom operator that compares dictionaries in xcom.
+"""
 
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
@@ -27,7 +28,6 @@ class CompareXComMapsOperator(BaseOperator):
         is fetched
   """
 
-  
   @apply_defaults
   def __init__(
       self,
