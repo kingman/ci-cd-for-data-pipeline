@@ -17,7 +17,7 @@ import datetime
 from airflow import models
 from airflow.contrib.operators.dataflow_operator import DataFlowJavaOperator
 from airflow.contrib.operators.gcs_download_operator import GoogleCloudStorageDownloadOperator
-from airflow.operators.python_operator import PythonOperator
+from compare_xcom_maps import CompareXComMapsOperator
 
 dataflow_staging_bucket = 'gs://%s/staging' % (
     models.Variable.get('dataflow_staging_bucket_test'))
@@ -39,37 +39,6 @@ download_task_prefix = 'download_result'
 yesterday = datetime.datetime.combine(
     datetime.datetime.today() - datetime.timedelta(1),
     datetime.datetime.min.time())
-
-
-def parse_str_obj(str_rep, obj):
-  entries = str_rep.split('\n')
-  for entry in entries:
-    if entry:
-      key, value = entry.split(': ')
-      obj[key] = value
-
-
-def compare_obj(ref_obj, res_obj):
-  if cmp(ref_obj, res_obj) != 0:
-    raise ValueError('Test result does not match the expected result')
-
-
-def read_value_as_obj(task_ids, context):
-  ret_obj = {}
-  for task_id in task_ids:
-    value_str = context['ti'].xcom_pull(
-        key=None,
-        task_ids=task_id)
-    parse_str_obj(value_str, ret_obj)
-  return ret_obj
-
-
-def verify_test_result(ref_task_id, res_task_ids, **context):
-  ref_obj = read_value_as_obj([ref_task_id], context)
-  res_obj = read_value_as_obj(res_task_ids, context)
-  compare_obj(ref_obj, res_obj)
-  return 'result contains the expected values'
-
 
 default_args = {
     'dataflow_default_options': {
@@ -123,16 +92,12 @@ with models.DAG(
       store_to_xcom_key='res_str_3',
       start_date=yesterday
   )
-  compare_result = PythonOperator(
+  compare_result = CompareXComMapsOperator(
       task_id='do_comparison',
-      provide_context=True,
-      python_callable=verify_test_result,
-      op_kwargs={
-          'ref_task_id': 'download_ref_string',
-          'res_task_ids': [download_task_prefix+'_1',
-                           download_task_prefix+'_2',
-                           download_task_prefix+'_3']
-      },
+      ref_task_ids=['download_ref_string'],
+      res_task_ids=[download_task_prefix+'_1',
+                    download_task_prefix+'_2',
+                    download_task_prefix+'_3'],
       start_date=yesterday
   )
 

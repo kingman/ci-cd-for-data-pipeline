@@ -35,6 +35,10 @@ steps:
   args: ['composer', 'environments', 'run', '${_COMPOSER_ENV_NAME}', '--location', '${_COMPOSER_REGION}','variables', '--', '--set', 'dataflow_jar_file_test', 'dataflow_deployment_$BUILD_ID.jar']
   id: 'set-composer-jar-ref'
 - name: gcr.io/cloud-builders/gsutil
+  args: ['cp', 'compare_xcom_maps.py', '${_COMPOSER_DAG_BUCKET}']
+  dir: '$REPO_NAME/workflow-dag'
+  id: 'deploy-custom-operator'
+- name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'data-pipeline-test.py', '${_COMPOSER_DAG_BUCKET}']
   dir: '$REPO_NAME/workflow-dag'
   id: 'deploy-processing-pipeline'
