@@ -55,7 +55,7 @@ with models.DAG(
       jar=dataflow_jar_location,
       start_date=yesterday,
       options={
-          'autoscalingAlgorithm': 'BASIC',
+          'autoscalingAlgorithm': 'THROUGHPUT_BASED',
           'maxNumWorkers': '3',
           'inputFile': input_bucket+'/input.txt',
           'output': output_bucket+'/'+output_prefix
