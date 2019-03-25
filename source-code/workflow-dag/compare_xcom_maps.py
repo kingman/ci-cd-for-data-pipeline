@@ -1,3 +1,4 @@
+# Do comparison between dictonaries stored in xcom
 # Copyright 2019 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +15,19 @@
 
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
+
+
 class CompareXComMapsOperator(BaseOperator):
+  """Compare dictionary stored in xcom.
+
+  Args:
+    ref_task_ids: list of task ids from where the reference dictionary
+        is fetched
+    res_task_ids: list of task ids from where the comparing dictionary
+        is fetched
   """
-  Compare dictionary stored in xcom.
-  :param ref_task_ids: list of task ids from where the reference dictionary
-  is fetched
-  :param res_task_ids: list of task ids from where the comparing dictionary
-  is fetched
-  """
+
+  
   @apply_defaults
   def __init__(
       self,
