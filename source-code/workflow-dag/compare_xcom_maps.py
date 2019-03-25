@@ -62,4 +62,17 @@ class CompareXComMapsOperator(BaseOperator):
 
   def compare_obj(self, ref_obj, res_obj):
     if cmp(ref_obj, res_obj) != 0:
-      raise ValueError('Test result does not match the expected result')
+      raise ValueError(self.create_diff_str(ref_obj, res_obj))
+
+  def create_diff_str(self, ref_obj, res_obj):
+    msg = 'The result differs from the expected in the following ways:'
+    for k in ref_obj:
+      if k not in res_obj:
+        msg = msg + ('\nmissing key: %s in result' % k)
+      elif ref_obj[k] != res_obj[k]:
+        msg = msg + ('\nexpected %s: %s but got %s: %s' % (
+            k, ref_obj[k], k, res_obj[k]))
+    for k in res_obj:
+      if k not in ref_obj:
+        msg = msg + ('\nunexpected key: %s in result' % k)
+    return msg
