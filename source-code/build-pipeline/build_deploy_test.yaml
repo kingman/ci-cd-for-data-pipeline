@@ -34,6 +34,11 @@ steps:
 - name: gcr.io/cloud-builders/gcloud
   args: ['composer', 'environments', 'run', '${_COMPOSER_ENV_NAME}', '--location', '${_COMPOSER_REGION}','variables', '--', '--set', 'dataflow_jar_file_test', 'dataflow_deployment_$BUILD_ID.jar']
   id: 'set-composer-jar-ref'
+- name: apache/airflow
+  entrypoint: 'python'
+  args: ['test_compare_xcom_maps.py']
+  dir: '$REPO_NAME/workflow-dag'
+  id: 'unit-test-on-operator-code'
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', 'compare_xcom_maps.py', '${_COMPOSER_DAG_BUCKET}']
   dir: '$REPO_NAME/workflow-dag'
