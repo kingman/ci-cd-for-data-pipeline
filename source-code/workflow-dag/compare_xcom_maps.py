@@ -61,7 +61,7 @@ class CompareXComMapsOperator(BaseOperator):
         obj[key] = value
 
   def compare_obj(self, ref_obj, res_obj):
-    if (ref_obj > res_obj) - (ref_obj < res_obj) != 0:
+    if ref_obj != res_obj:
       raise ValueError(self.create_diff_str(ref_obj, res_obj))
 
   def create_diff_str(self, ref_obj, res_obj):

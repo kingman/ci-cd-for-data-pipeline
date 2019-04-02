@@ -36,11 +36,11 @@ def generate_mock_function(first_value, second_value, third_value):
 
 
 def equal_mock():
-  return generate_mock_function('a: 1', 'b: 2', 'c: 3')
+  return generate_mock_function('c: 3', 'b: 2', 'a: 1')
 
 
 def missing_value_mock():
-  return generate_mock_function('a: 1', 'b: 2', 'b: 2')
+  return generate_mock_function('b: 2', 'a: 1', 'b: 2')
 
 
 def wrong_value_mock():
@@ -48,7 +48,7 @@ def wrong_value_mock():
 
 
 def unexpected_value_mock():
-  return generate_mock_function('a: 1', 'b: 2', 'c: 3\nd: 4')
+  return generate_mock_function('a: 1', 'c: 3\nd: 4', 'b: 2')
 
 
 class CompareXComMapsOperatorTest(unittest.TestCase):
